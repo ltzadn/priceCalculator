@@ -152,33 +152,71 @@ function FormikContainer() {
 		console.log(sum);
 	};
 
+	// const calculateAdditionalTotal = (selectedOptions, guestCount) => {
+	// 	let sum = 0;
+	// 	const selectedAdditionalOption = additionalOptions.filter(option => selectedOptions.includes(option.value));
+	// 	selectedAdditionalOption.forEach(selected => {
+	// 		if (selected.type === undefined) {
+	// 			sum += selected.price;
+	// 		} else {
+	// 			sum += selected.price * guestCount;
+	// 		}
+	// 	});
+	// 	return sum;
+	// };
+
 	const calculateAdditionalTotal = (selectedOptions, guestCount) => {
-		let sum = 0;
 		const selectedAdditionalOption = additionalOptions.filter(option => selectedOptions.includes(option.value));
-		selectedAdditionalOption.forEach(selected => {
-			if (selected.type === undefined) {
-				sum += selected.price;
-			} else {
-				sum += selected.price * guestCount;
-			}
-		});
+
+		const sum = selectedAdditionalOption
+			.map(selected => {
+				if (selected.type === undefined) {
+					return selected.price;
+				} else {
+					return selected.price * guestCount;
+				}
+			})
+			.reduce((acc, curr) => acc + curr, 0);
+
 		return sum;
 	};
 
+	// const calculateOpenbarTotal = (selectedOptions, guestCount, hoursCount) => {
+	// 	let sum = 0;
+	// 	const selectedAdditionalOption = openbarOptions.filter(option => selectedOptions.includes(option.value));
+	// 	selectedAdditionalOption.forEach(selected => {
+	// 		if (selected.type === undefined) {
+	// 			sum += selected.price;
+	// 		} else {
+	// 			sum += selected.price * guestCount;
+	// 		}
+	// 		if (selected.extraHourPrice !== undefined && selected.extraHourTreshold !== undefined) {
+	// 			let hoursAboveThreshold = hoursCount - selected.extraHourTreshold;
+	// 			sum += hoursAboveThreshold * selected.extraHourPrice;
+	// 		}
+	// 	});
+	// 	return sum;
+	// };
+
 	const calculateOpenbarTotal = (selectedOptions, guestCount, hoursCount) => {
-		let sum = 0;
 		const selectedAdditionalOption = openbarOptions.filter(option => selectedOptions.includes(option.value));
-		selectedAdditionalOption.forEach(selected => {
-			if (selected.type === undefined) {
-				sum += selected.price;
-			} else {
-				sum += selected.price * guestCount;
-			}
-			if (selected.extraHourPrice !== undefined && selected.extraHourTreshold !== undefined) {
-				let hoursAboveThreshold = hoursCount - selected.extraHourTreshold;
-				sum += hoursAboveThreshold * selected.extraHourPrice;
-			}
-		});
+
+		const sum = selectedAdditionalOption
+			.map(selected => {
+				let optionPrice = 0;
+				if (selected.type === undefined) {
+					optionPrice += selected.price;
+				} else {
+					optionPrice += selected.price * guestCount;
+				}
+				if (selected.extraHourPrice !== undefined && selected.extraHourTreshold !== undefined) {
+					let hoursAboveThreshold = hoursCount - selected.extraHourTreshold;
+					optionPrice += hoursAboveThreshold * selected.extraHourPrice;
+				}
+				return optionPrice;
+			})
+			.reduce((acc, curr) => acc + curr, 0);
+
 		return sum;
 	};
 
@@ -243,17 +281,17 @@ function FormikContainer() {
 	};
 
 	const validationSchema = Yup.object({
-		// grillOption: Yup.string().required('Required'),
-		// guestCount: Yup.number().required('Required'),
-		// hoursCount: Yup.number().required('Required'),
-		// selectOption: Yup.string().required('Required'),
-		// pastryOption: Yup.string().required('Required'),
-		// lunchOption: Yup.string().required('Required'),
-		// fingerfoodOption: Yup.string().required('Required'),
-		// musicOption: Yup.string().required('Required'),
-		// serviceOption: Yup.string().required('Required'),
-		// openbarOption: Yup.array().required('Required'),
-		// additionalOption: Yup.array().required('Required'),
+		grillOption: Yup.string().required('Required'),
+		guestCount: Yup.number().required('Required'),
+		hoursCount: Yup.number().required('Required'),
+		selectOption: Yup.string().required('Required'),
+		pastryOption: Yup.string().required('Required'),
+		lunchOption: Yup.string().required('Required'),
+		fingerfoodOption: Yup.string().required('Required'),
+		musicOption: Yup.string().required('Required'),
+		serviceOption: Yup.string().required('Required'),
+		openbarOption: Yup.array().required('Required'),
+		additionalOption: Yup.array().required('Required'),
 	});
 	// const validationSchema = formikValidation(initialValues);
 
